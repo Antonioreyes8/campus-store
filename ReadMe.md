@@ -1,0 +1,1 @@
+ssh -i ~/Downloads/campus-key.pem ubuntu@3.17.135.106
