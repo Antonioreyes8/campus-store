@@ -20,7 +20,6 @@ jobs:
       - name: Run Basic Tests
         run: |
           echo "Verifying service health..."
-          # In a real-world scenario, you would run 'pytest' or similar here
           echo "Build successful."
 
   deploy:
@@ -31,16 +30,10 @@ jobs:
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.secrets.EC2_USER }}
+          username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Navigate to your project folder
             cd ~/campus-store
-            
-            # Pull the latest code from GitHub
             git pull origin main
-            
-            # Restart the microservices using Docker Compose
-            # -d runs it in the background, --build ensures the latest code is used
             sudo docker-compose down
             sudo docker-compose up -d --build
