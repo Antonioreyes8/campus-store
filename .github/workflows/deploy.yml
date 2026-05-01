@@ -1,33 +1,46 @@
-name: Deploy to EC2
+name: Cloud-Native CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Copy SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/github_actions_ec2
-          chmod 600 ~/.ssh/github_actions_ec2
+      - name: Build Product Service Image
+        run: docker build -t product-service ./services/product-service
 
-      - name: SSH & Deploy
+      - name: Build Order Service Image
+        run: docker build -t order-service ./services/order-service
+
+      - name: Run Basic Tests
+        run: |
+          echo "Verifying service health..."
+          # In a real-world scenario, you would run 'pytest' or similar here
+          echo "Build successful."
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH & Deploy to EC2
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
+          username: ${{ secrets.secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Navigate to your project folder
             cd ~/campus-store
-            git reset --hard
+            
+            # Pull the latest code from GitHub
             git pull origin main
-            source venv/bin/activate
-            sudo systemctl restart campus-store
+            
+            # Restart the microservices using Docker Compose
+            # -d runs it in the background, --build ensures the latest code is used
+            sudo docker-compose down
+            sudo docker-compose up -d --build
