@@ -3,7 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Define the location of the SQLite database file
-SQLALCHEMY_DATABASE_URL = "postgresql://campusadmin:MyStrongPassword123!@campus-store-aurora.cluster-c123456.us-east-2.rds.amazonaws.com:5432/campus_store_db"
+# This uses a local file instead of a remote AWS server
+SQLALCHEMY_DATABASE_URL = "sqlite:///./campus_store.db"
 
 # Create the engine to talk to the database
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
