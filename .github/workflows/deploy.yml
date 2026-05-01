@@ -35,7 +35,14 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # Cloud-Native Deployment Update
             cd ~/campus-store
-            git pull origin main
+            
+            # 1. Force the reset to kill the .db conflict
+            git fetch --all
+            git reset --hard origin/main
+            
+            # 2. Rebuild and restart the containers
+            # This ensures it finds the docker-compose.yml file we just pushed
             sudo docker-compose down
             sudo docker-compose up -d --build
