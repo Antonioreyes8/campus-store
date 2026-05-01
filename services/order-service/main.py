@@ -9,7 +9,7 @@ app = FastAPI()
 
 # URL of your other service (Use the public Render/AWS URL or Docker service name)
 PRODUCT_SERVICE_URL = "http://product-service:8001" 
-LAMBDA_URL = "https://your-lambda-url.aws.com/default/order-logger"
+LAMBDA_URL = "https://zjxyt6g6d4syy274j3e53xx6ca0nxqmf.lambda-url.us-east-2.on.aws/ "
 
 def get_db():
     db = database.SessionLocal()
