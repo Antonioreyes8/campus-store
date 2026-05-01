@@ -1,7 +1,7 @@
 import requests # This is how services talk to each other!
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from . import models, database
+import models, database
 
 models.Base.metadata.create_all(bind=database.engine)
 
